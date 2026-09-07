@@ -49,66 +49,78 @@ export const CertificatesSection: React.FC<CertificatesSectionProps> = ({ onSele
           </h2>
           <p
             style={{
-              fontSize: "1.1rem",
+              fontSize: "clamp(0.95rem, 2vw, 1.1rem)",
               color: "var(--text-secondary)",
-              maxWidth: "640px",
+              maxWidth: "680px",
               margin: "0 auto",
+              lineHeight: 1.6,
             }}
           >
-            Verified credentials from Walmart, Red Bull, and Lovely Professional University validating commercial sales execution, territory management, and data analytics.
+            Verified credentials from Walmart, Red Bull, Bajaj Capital, and Lovely Professional University validating commercial sales execution, wealth advisory, territory management, and business intelligence.
           </p>
         </div>
 
         {/* 4 Certificates Grid */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-            gap: "24px",
-            marginBottom: "64px",
-          }}
-        >
+        <div className="certificates-grid">
           {portfolioData.certifications.map((cert) => (
             <div
               key={cert.id}
-              className="pop-card"
-              style={{
-                background: "#FFFFFF",
-                borderRadius: "var(--radius-xl)",
-                overflow: "hidden",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "space-between",
-                padding: "18px",
+              className="pop-card certificate-card"
+              onClick={() => onSelectCertificate(cert)}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  onSelectCertificate(cert);
+                }
               }}
             >
               <div>
                 {/* Certificate Document Thumbnail Preview */}
                 <div
-                  style={{
-                    position: "relative",
-                    width: "100%",
-                    height: "190px",
-                    borderRadius: "var(--radius-md)",
-                    overflow: "hidden",
-                    border: "1.5px solid var(--border-dark)",
-                    marginBottom: "14px",
-                    background: "var(--bg-canvas)",
-                    cursor: "pointer",
+                  className="certificate-thumb"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onSelectCertificate(cert);
                   }}
-                  onClick={() => onSelectCertificate(cert)}
                 >
                   <Image
                     src={cert.image}
                     alt={cert.title}
                     fill
-                    style={{ objectFit: "cover", objectPosition: "top" }}
+                    sizes="(max-width: 640px) 100vw, (max-width: 1140px) 50vw, 25vw"
+                    style={{ objectFit: "cover", objectPosition: "top center" }}
                   />
+                  {/* Subtle mobile/desktop preview badge */}
+                  <div
+                    style={{
+                      position: "absolute",
+                      bottom: "8px",
+                      right: "8px",
+                      background: "rgba(18, 16, 25, 0.82)",
+                      backdropFilter: "blur(4px)",
+                      color: "#FFFFFF",
+                      borderRadius: "var(--radius-full)",
+                      padding: "4px 10px",
+                      fontSize: "0.72rem",
+                      fontWeight: 800,
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "5px",
+                      boxShadow: "0 2px 6px rgba(0,0,0,0.3)",
+                    }}
+                  >
+                    <Eye size={12} />
+                    <span>View</span>
+                  </div>
+
+                  {/* Desktop Hover Overlay */}
                   <div
                     style={{
                       position: "absolute",
                       inset: 0,
-                      background: "rgba(17, 24, 39, 0.45)",
+                      background: "rgba(18, 16, 25, 0.45)",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
@@ -140,7 +152,7 @@ export const CertificatesSection: React.FC<CertificatesSectionProps> = ({ onSele
                 </div>
 
                 {/* Badge & Issuer */}
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "8px" }}>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "6px", marginBottom: "8px" }}>
                   <span
                     style={{
                       background: "var(--accent-primary-light)",
@@ -165,7 +177,7 @@ export const CertificatesSection: React.FC<CertificatesSectionProps> = ({ onSele
                 <h3
                   style={{
                     fontFamily: "var(--font-heading)",
-                    fontSize: "1.15rem",
+                    fontSize: "1.12rem",
                     fontWeight: 900,
                     color: "var(--text-primary)",
                     lineHeight: 1.25,
@@ -207,19 +219,16 @@ export const CertificatesSection: React.FC<CertificatesSectionProps> = ({ onSele
               {/* Action Button */}
               <div style={{ borderTop: "1px solid var(--border-subtle)", paddingTop: "12px" }}>
                 <button
-                  onClick={() => onSelectCertificate(cert)}
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: "6px",
-                    fontFamily: "var(--font-heading)",
-                    fontWeight: 800,
-                    fontSize: "0.85rem",
-                    color: "var(--accent-primary)",
+                  type="button"
+                  className="certificate-action-btn"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onSelectCertificate(cert);
                   }}
+                  aria-label={`Inspect ${cert.title} certificate`}
                 >
                   <Eye size={15} />
-                  <span>Inspect High-Res Certificate</span>
+                  <span>Inspect High-Res Credential</span>
                 </button>
               </div>
             </div>
@@ -251,6 +260,7 @@ export const CertificatesSection: React.FC<CertificatesSectionProps> = ({ onSele
 
         {/* 4 Dedicated Section Tabs (Centific, Dabur, PepsiCo, EcoRealm) */}
         <div
+          className="gallery-tabs-scroll no-scrollbar"
           style={{
             display: "flex",
             alignItems: "center",
@@ -429,17 +439,18 @@ export const CertificatesSection: React.FC<CertificatesSectionProps> = ({ onSele
         <div
           className="modal-overlay"
           onClick={() => setZoomedPhoto(null)}
-          style={{ zIndex: 120, position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}
+          style={{ zIndex: 120, position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.78)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 'clamp(10px, 2.5vw, 24px)' }}
         >
           <div
             className="modal-content"
             onClick={(e) => e.stopPropagation()}
             style={{
               background: "#FFFFFF",
-              borderRadius: "var(--radius-xl)",
+              borderRadius: "clamp(16px, 3vw, 24px)",
               maxWidth: "760px",
               width: "100%",
-              overflow: "hidden",
+              maxHeight: "92vh",
+              overflowY: "auto",
               border: "2.5px solid var(--border-dark)",
               boxShadow: "0 25px 60px rgba(0, 0, 0, 0.4)",
             }}
@@ -448,7 +459,7 @@ export const CertificatesSection: React.FC<CertificatesSectionProps> = ({ onSele
               style={{
                 position: "relative",
                 width: "100%",
-                height: "460px",
+                height: "clamp(240px, 50vh, 460px)",
                 background: "#000000",
               }}
             >
@@ -456,11 +467,12 @@ export const CertificatesSection: React.FC<CertificatesSectionProps> = ({ onSele
                 src={zoomedPhoto.image}
                 alt={zoomedPhoto.title}
                 fill
+                sizes="(max-width: 768px) 100vw, 760px"
                 style={{ objectFit: "contain" }}
               />
             </div>
-            <div style={{ padding: "20px 24px" }}>
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "8px" }}>
+            <div style={{ padding: "clamp(14px, 2vw, 24px)" }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "8px", flexWrap: "wrap", gap: "8px" }}>
                 <span
                   style={{
                     background: "var(--accent-primary-light)",
@@ -490,10 +502,10 @@ export const CertificatesSection: React.FC<CertificatesSectionProps> = ({ onSele
                   Close
                 </button>
               </div>
-              <h4 style={{ fontFamily: "var(--font-heading)", fontSize: "1.2rem", fontWeight: 900, marginBottom: "4px" }}>
+              <h4 style={{ fontFamily: "var(--font-heading)", fontSize: "clamp(1.05rem, 2vw, 1.25rem)", fontWeight: 900, marginBottom: "4px" }}>
                 {zoomedPhoto.title}
               </h4>
-              <p style={{ fontSize: "0.9rem", color: "var(--text-secondary)", lineHeight: 1.5 }}>
+              <p style={{ fontSize: "0.88rem", color: "var(--text-secondary)", lineHeight: 1.5 }}>
                 {zoomedPhoto.caption}
               </p>
             </div>

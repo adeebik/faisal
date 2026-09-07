@@ -28,21 +28,14 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({ certificate,
   if (!certificate) return null;
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
+    <div
+      className="modal-overlay"
+      onClick={onClose}
+      style={{ padding: "clamp(8px, 2.5vw, 24px)", zIndex: 1000 }}
+    >
       <div
-        className="modal-content"
+        className="modal-content cert-modal-content"
         onClick={(e) => e.stopPropagation()}
-        style={{
-          background: "#FFFFFF",
-          borderRadius: "var(--radius-xl)",
-          maxWidth: "880px",
-          width: "100%",
-          maxHeight: "92vh",
-          overflowY: "auto",
-          border: "2.5px solid var(--border-dark)",
-          boxShadow: "0 25px 60px rgba(0, 0, 0, 0.4)",
-          position: "relative",
-        }}
       >
         {/* Header */}
         <div
@@ -51,33 +44,43 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({ certificate,
             top: 0,
             background: "#FFFFFF",
             borderBottom: "2px solid var(--border-dark)",
-            padding: "16px 24px",
+            padding: "clamp(12px, 2vw, 16px) clamp(14px, 2.5vw, 24px)",
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
             zIndex: 10,
-            borderRadius: "var(--radius-xl) var(--radius-xl) 0 0",
+            gap: "10px",
           }}
         >
-          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap", minWidth: 0 }}>
             <span
               style={{
                 display: "inline-flex",
                 alignItems: "center",
-                gap: "6px",
+                gap: "5px",
                 background: "var(--accent-primary-light)",
                 border: "1.5px solid var(--accent-primary)",
                 borderRadius: "var(--radius-full)",
-                padding: "3px 12px",
-                fontSize: "0.8rem",
+                padding: "3px 10px",
+                fontSize: "0.75rem",
                 fontWeight: 800,
                 color: "var(--accent-primary)",
+                whiteSpace: "nowrap",
               }}
             >
               <ShieldCheck size={14} />
               <span>VERIFIED CREDENTIAL</span>
             </span>
-            <span style={{ fontSize: "0.9rem", color: "var(--text-muted)", fontWeight: 700 }}>
+            <span
+              style={{
+                fontSize: "0.85rem",
+                color: "var(--text-muted)",
+                fontWeight: 700,
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}
+            >
               {certificate.issuer}
             </span>
           </div>
@@ -88,6 +91,8 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({ certificate,
             style={{
               width: "36px",
               height: "36px",
+              minWidth: "36px",
+              minHeight: "36px",
               borderRadius: "50%",
               border: "2px solid var(--border-dark)",
               background: "var(--bg-card-subtle)",
@@ -95,6 +100,7 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({ certificate,
               alignItems: "center",
               justifyContent: "center",
               transition: "transform 0.15s ease",
+              cursor: "pointer",
             }}
             onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.08)")}
             onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
@@ -104,19 +110,31 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({ certificate,
         </div>
 
         {/* Modal Body */}
-        <div style={{ padding: "24px" }}>
+        <div className="cert-modal-body">
           <h2
             style={{
               fontFamily: "var(--font-heading)",
-              fontSize: "1.5rem",
+              fontSize: "clamp(1.2rem, 3vw, 1.55rem)",
               fontWeight: 900,
               color: "var(--text-primary)",
               marginBottom: "6px",
+              lineHeight: 1.25,
             }}
           >
             {certificate.title}
           </h2>
-          <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "20px", fontSize: "0.88rem", color: "var(--text-secondary)" }}>
+
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "8px 12px",
+              marginBottom: "18px",
+              fontSize: "0.88rem",
+              color: "var(--text-secondary)",
+              flexWrap: "wrap",
+            }}
+          >
             <span style={{ fontWeight: 800, color: "var(--accent-primary)" }}>{certificate.issuer}</span>
             <span>•</span>
             <span style={{ display: "flex", alignItems: "center", gap: "4px" }}>
@@ -126,41 +144,40 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({ certificate,
           </div>
 
           {/* High-Res Certificate Image Container */}
-          <div
-            style={{
-              position: "relative",
-              width: "100%",
-              minHeight: "420px",
-              borderRadius: "var(--radius-lg)",
-              overflow: "hidden",
-              border: "2px solid var(--border-dark)",
-              boxShadow: "var(--shadow-pop-sm)",
-              marginBottom: "20px",
-              background: "#F9FAFB",
-            }}
-          >
+          <div className="cert-preview-frame">
             <Image
               src={certificate.image}
               alt={certificate.title}
-              width={800}
-              height={560}
-              style={{
-                width: "100%",
-                height: "auto",
-                objectFit: "contain",
-                display: "block",
-              }}
+              width={1000}
+              height={750}
+              priority
+              className="cert-preview-img"
             />
           </div>
 
           {/* Description & Competencies */}
           <div style={{ marginBottom: "20px" }}>
-            <p style={{ fontSize: "0.95rem", color: "var(--text-secondary)", lineHeight: 1.6, marginBottom: "16px" }}>
+            <p
+              style={{
+                fontSize: "clamp(0.88rem, 1.8vw, 0.95rem)",
+                color: "var(--text-secondary)",
+                lineHeight: 1.6,
+                marginBottom: "16px",
+              }}
+            >
               {certificate.description}
             </p>
 
             <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
-              <span style={{ fontSize: "0.78rem", fontWeight: 800, color: "var(--text-muted)", textTransform: "uppercase" }}>
+              <span
+                style={{
+                  fontSize: "0.76rem",
+                  fontWeight: 800,
+                  color: "var(--text-muted)",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.04em",
+                }}
+              >
                 COMPETENCIES VERIFIED:
               </span>
               {certificate.skillsLearned.map((skill) => (
@@ -170,8 +187,8 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({ certificate,
                     background: "var(--bg-canvas)",
                     border: "1px solid var(--border-dark)",
                     borderRadius: "var(--radius-full)",
-                    padding: "4px 12px",
-                    fontSize: "0.8rem",
+                    padding: "3px 10px",
+                    fontSize: "0.78rem",
                     fontWeight: 700,
                     color: "var(--text-primary)",
                   }}
@@ -183,19 +200,9 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({ certificate,
           </div>
 
           {/* Footer Action */}
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              paddingTop: "16px",
-              borderTop: "1.5px solid var(--border-subtle)",
-              flexWrap: "wrap",
-              gap: "10px",
-            }}
-          >
+          <div className="cert-footer-wrap">
             <div style={{ fontSize: "0.82rem", color: "var(--text-muted)" }}>
-              Official credential of Faisal Farhan Ansari
+              Official verified credential of Faisal Farhan Ansari
             </div>
             <a
               href={certificate.image}
@@ -203,7 +210,7 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({ certificate,
               rel="noreferrer"
               download
               className="btn-primary"
-              style={{ fontSize: "0.85rem", padding: "8px 18px" }}
+              style={{ fontSize: "0.85rem", padding: "10px 20px" }}
             >
               <Download size={15} />
               <span>Download Original Document</span>
